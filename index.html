@@ -1,63 +1,28 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LB Tickets</title>
-
-<style>
-  body { margin:0; font-family: Arial, Helvetica, sans-serif; background:#f4f4f4; padding:80px 20px; }
-  .wrap { max-width: 650px; margin:auto; background:#fff; border-radius:10px; padding:35px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
-  h1 { margin:0 0 10px; color:#EC0016; }
-  .price { font-size:18px; margin:10px 0 25px; }
-  input { width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; }
-  .btn { margin-top:14px; background:#EC0016; color:#fff; border:none; padding:12px 18px; font-weight:bold; border-radius:8px; cursor:pointer; }
-  .btn:hover { filter:brightness(1.05); }
-  .box { margin-top:18px; background:#f2f2f2; border-left:6px solid #EC0016; padding:14px; border-radius:8px; display:none; }
-  pre { margin:10px 0 0; white-space:pre-wrap; word-break:break-word; font-family: Consolas, monospace; }
-  .copy { margin-top:10px; background:#fff; color:#EC0016; border:2px solid #EC0016; padding:10px 14px; font-weight:bold; border-radius:8px; cursor:pointer; }
-  .copy:hover { background:#EC0016; color:#fff; }
-  .hint { margin-top:18px; color:#444; font-size:14px; }
-</style>
-</head>
-<body>
-
-<div class="wrap">
-  <h1>LB Jahreskarte</h1>
-  <div class="price">Preis: <b>70$ Economy Dollars</b> (RP-Jahr)</div>
-
-  <label for="playerName"><b>Minecraft-Name</b></label>
-  <input id="playerName" placeholder="z.B. Loliflo" autocomplete="off">
-
-  <button class="btn" onclick="generate()">LB Karte Kaufen</button>
-
-  <div id="out" class="box">
-    <div><b>Im Spiel ausführen:</b></div>
-    <pre id="cmd"></pre>
-    <button class="copy" onclick="copyCmd()">Befehl kopieren</button>
-  </div>
-
-  <div class="hint">
-    Hinweis: Der Kauf wird im Spiel durchgeführt (Feather-Server). Das Ticket wird anschließend serverseitig als TXT gespeichert.
-  </div>
-</div>
+<input id="playerName" placeholder="Minecraft Name">
+<button onclick="buyNow()">LB Karte Kaufen</button>
 
 <script>
-function generate(){
-  const n = document.getElementById("playerName").value.trim();
-  if(!n) return alert("Bitte Minecraft-Namen eingeben!");
-  const command = "/lbkarte kaufen " + n;
+const API_URL = "DEINE_WEBAPP_URL_HIER";
+const KEY = "MEIN_SECRET_KEY";
 
-  document.getElementById("cmd").textContent = command;
-  document.getElementById("out").style.display = "block";
-}
+async function buyNow(){
+  const name = document.getElementById("playerName").value.trim();
+  if(!name) return alert("Bitte Minecraft-Namen eingeben!");
 
-function copyCmd(){
-  const text = document.getElementById("cmd").textContent;
-  if(!text) return;
-  navigator.clipboard.writeText(text).then(()=>alert("Kopiert ✅")).catch(()=>alert("Konnte nicht kopieren – markier den Befehl manuell."));
+  try{
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ action:"order", key: KEY, player: name })
+    });
+    const data = await res.json();
+    if(data.ok){
+      alert("Bestellung angekommen ✅\nOrder-ID: " + data.id + "\nWird gleich automatisch im Server verarbeitet.");
+    } else {
+      alert("Fehler: " + data.error);
+    }
+  }catch(e){
+    alert("Konnte nicht senden: " + e);
+  }
 }
 </script>
-
-</body>
-</html>
