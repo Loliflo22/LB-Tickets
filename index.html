@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LB Tickets</title>
 
 <style>
@@ -110,7 +110,7 @@
     </div>
 
     <label for="playerName">Minecraft-Name</label>
-    <input id="playerName" placeholder="z.B. BenBoss2009" autocomplete="off" />
+    <input id="playerName" placeholder="z.B. BenBoss2009" autocomplete="off">
 
     <button class="btn" onclick="buyNow()">LB Karte Kaufen</button>
 
@@ -118,20 +118,18 @@
 
     <div class="hint">
       Hinweis: Diese Seite legt eine Bestellung an. Der MC1_16 Server holt die Bestellungen automatisch ab und zieht das Geld ab.
-      Wenn du nicht genug Geld hast, wird die Bestellung als Fehler markiert.
-      Das Kaufen von Tickets auf andere Namen ist verboten und führt direkt zu einem Ban!
+      Wenn du nicht genug Geld hast, wird die Bestellung als Fehler markiert. Das Kaufen von Tickets auf andere Namen ist verboten und führt direkt zu einem Ban!
     </div>
   </div>
 
   <div class="footer">
-    © Lowlights Bahn — <a href="https://loliflo22.github.io/LowlightsBahn/" target="_blank" rel="noopener">Zur Hauptseite</a>
+    © Lowlights Bahn — <a href="https://loliflo22.github.io/LowlightsBahn/" target="_blank">Zur Hauptseite</a>
   </div>
 </div>
 
 <script>
-/** ✅ HIER ANPASSEN */
+/** ✅ HIER EINTRAGEN: deine aktuelle Web-App /exec URL */
 const API_URL = "https://script.google.com/macros/s/AKfycbxvglhIAWG6IL5w322WrwlI9NOOpLILgydr2q_oDV0OMpKWMSkOQpDJX9PzyleWaziM/exec";
-const KEY     = "LB_2026_kaufen_70"; // muss exakt wie im Apps Script SECRET sein
 
 function show(msg, ok=true){
   const box = document.getElementById("statusBox");
@@ -147,21 +145,23 @@ async function buyNow(){
   show("Bestellung wird gesendet…", true);
 
   try{
-    const payload = { action:"order", key: KEY, player: name };
-
-    // WICHTIG: text/plain -> kein Preflight -> Apps Script + GitHub Pages klappt
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload),
-      redirect: "follow"
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ action:"order", player: name })
     });
 
+    // Falls Google mal kein JSON liefert:
     const text = await res.text();
-
     let data;
-    try { data = JSON.parse(text); }
-    catch(_) { throw new Error("Antwort ist kein JSON: " + text); }
+    try { data = JSON.parse(text); } catch(e){ data = null; }
+
+    if(!res.ok){
+      return show("HTTP Fehler: " + res.status + " – " + text, false);
+    }
+    if(!data){
+      return show("Unerwartete Antwort (kein JSON): " + text, false);
+    }
 
     if(data.ok){
       show("Bestellung angekommen ✅ (Order-ID: " + data.id + "). Wird gleich automatisch im Server verarbeitet.", true);
@@ -169,7 +169,7 @@ async function buyNow(){
       show("Fehler: " + (data.error || "unknown"), false);
     }
   }catch(e){
-    show("Konnte nicht senden: " + (e && e.message ? e.message : e), false);
+    show("Konnte nicht senden: " + e, false);
   }
 }
 </script>
