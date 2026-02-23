@@ -1,112 +1,162 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LB Tickets</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LB Tickets</title>
 
-<style>
-  body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f4f4; padding:90px 20px; }
-  .wrap { max-width:700px; margin:auto; background:#fff; border-radius:10px; padding:35px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
-  .top { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
-  .logo { font-weight:bold; background:#EC0016; color:#fff; padding:8px 14px; border-radius:6px; font-size:18px; }
-  h1 { margin:0; color:#EC0016; }
-  .sub { color:#333; margin:8px 0 0; }
-  .card { margin-top:18px; border-left:6px solid #EC0016; background:#f7f7f7; padding:18px; border-radius:10px; }
-  .price { font-size:18px; margin:0 0 14px; }
-  label { display:block; font-weight:bold; margin:12px 0 6px; }
-  input { width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; box-sizing:border-box; }
-  .btn { margin-top:14px; background:#EC0016; color:#fff; border:none; padding:12px 18px; font-weight:bold; border-radius:8px; cursor:pointer; width:100%; font-size:16px; }
-  .btn:disabled { opacity:.6; cursor:not-allowed; }
-  .btn:hover { filter:brightness(1.05); }
-  .hint { margin-top:12px; font-size:13px; color:#444; line-height:1.4; }
-  .status { margin-top:14px; padding:12px; border-radius:8px; display:none; }
-  .ok { background:#eaf8ee; border:1px solid #b8e2c2; color:#1f6b2f; }
-  .err { background:#fdecec; border:1px solid #f1b5b5; color:#8a1f1f; }
-  .footer { margin-top:22px; font-size:12px; color:#666; text-align:center; }
-  a { color:#EC0016; text-decoration:none; font-weight:bold; }
-</style>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f4f4;
+      padding: 90px 20px;
+    }
+    .wrap {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 35px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    .top {
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin-bottom: 18px;
+    }
+    .logo {
+      font-weight: bold;
+      background: #EC0016;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 18px;
+    }
+    h1 { margin: 0; color: #EC0016; }
+    .sub { color:#333; margin: 8px 0 0; }
+    .card {
+      margin-top: 18px;
+      border-left: 6px solid #EC0016;
+      background: #f7f7f7;
+      padding: 18px;
+      border-radius: 10px;
+    }
+    .price {
+      font-size: 18px;
+      margin: 0 0 14px;
+    }
+    label { display:block; font-weight:bold; margin: 12px 0 6px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    .btn {
+      margin-top: 14px;
+      background: #EC0016;
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    .btn:hover { filter: brightness(1.05); }
+    .hint {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #444;
+      line-height: 1.4;
+    }
+    .status {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      display:none;
+      word-break: break-word;
+    }
+    .ok { background:#eaf8ee; border: 1px solid #b8e2c2; color:#1f6b2f; }
+    .err { background:#fdecec; border: 1px solid #f1b5b5; color:#8a1f1f; }
+    .footer {
+      margin-top: 22px;
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+    a { color:#EC0016; text-decoration:none; font-weight:bold; }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="top">
-    <div class="logo">LB</div>
-    <div>
-      <h1>LB Jahreskarte</h1>
-      <div class="sub">Bestellung wird automatisch im Server verarbeitet.</div>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo">LB</div>
+      <div>
+        <h1>LB Jahreskarte</h1>
+        <div class="sub">Bestellung wird automatisch im Server verarbeitet.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="price">
+        Preis: <b>70$ Economy Dollars</b> (gültig 1 RP-Jahr) <br>
+        Mehrfachkauf = <b>Verlängerung</b> um 1 RP-Jahr.
+      </div>
+
+      <label for="playerName">Minecraft-Name</label>
+      <input id="playerName" placeholder="z.B. BenBoss2009" autocomplete="off">
+
+      <button class="btn" onclick="buyNow()">LB Karte Kaufen</button>
+
+      <div id="statusBox" class="status"></div>
+
+      <div class="hint">
+        Hinweis: Diese Seite legt eine Bestellung an. Der Server holt die Bestellungen automatisch ab und zieht das Geld ab.
+        Wenn du nicht genug Geld hast, wird die Bestellung als Fehler markiert.
+        Das kaufen von Tickets auf andere Namen ist verboten und führt direkt zu einem Ban!
+      </div>
+    </div>
+
+    <div class="footer">
+      © Lowlights Bahn — <a href="https://loliflo22.github.io/LowlightsBahn/" target="_blank">Zur Hauptseite</a>
     </div>
   </div>
 
-  <div class="card">
-    <div class="price">
-      Preis: <b>70$ Economy Dollars</b> (gültig 1 RP-Jahr) <br>
-      Mehrfachkauf = <b>Verlängerung</b> um 1 RP-Jahr.
-    </div>
+  <script>
+    /** ✅ HIER ANPASSEN */
+    const API_URL = "https://script.google.com/macros/s/AKfycbwMiO0fiEoIw272bbMo5227ZY5OE0Y4Zju0q_9Tlub9kGY2lPDcuODC07dg5cB9JMK0/exec";
 
-    <label for="playerName">Minecraft-Name</label>
-    <input id="playerName" placeholder="z.B. BenBoss2009" autocomplete="off">
+    function show(msg, ok=true){
+      const box = document.getElementById("statusBox");
+      box.style.display = "block";
+      box.className = "status " + (ok ? "ok" : "err");
+      box.textContent = msg;
+    }
 
-    <!-- FORM statt fetch (CORS-sicher) -->
-    <form id="buyForm" target="hiddenFrame" method="POST">
-      <input type="hidden" name="action" value="order">
-      <input type="hidden" id="playerField" name="player" value="">
-      <button id="buyBtn" class="btn" type="submit">LB Karte Kaufen</button>
-    </form>
+    function buyNow(){
+      const name = document.getElementById("playerName").value.trim();
+      if(!name){
+        show("Bitte Minecraft-Namen eingeben.", false);
+        return;
+      }
 
-    <!-- unsichtbarer iframe, damit die Seite nicht wegnavigiert -->
-    <iframe name="hiddenFrame" id="hiddenFrame" style="display:none;"></iframe>
+      show("Bestellung wird gespeichert…", true);
 
-    <div id="statusBox" class="status"></div>
+      // ✅ CORS-sicher: GET Request via Image()-Ping
+      const url = API_URL + "?action=order&player=" + encodeURIComponent(name);
 
-    <div class="hint">
-      Hinweis: Diese Seite legt eine Bestellung an. Der MC1_16 Server holt die Bestellungen automatisch ab und zieht das Geld ab.
-      Wenn du nicht genug Geld hast, wird die Bestellung als Fehler markiert.
-    </div>
-  </div>
-
-  <div class="footer">
-    © Lowlights Bahn — <a href="https://loliflo22.github.io/LowlightsBahn/" target="_blank">Zur Hauptseite</a>
-  </div>
-</div>
-
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxvglhIAWG6IL5w322WrwlI9NOOpLILgydr2q_oDV0OMpKWMSkOQpDJX9PzyleWaziM/exec";
-
-function show(msg, ok=true){
-  const box = document.getElementById("statusBox");
-  box.style.display = "block";
-  box.className = "status " + (ok ? "ok" : "err");
-  box.textContent = msg;
-}
-
-const form = document.getElementById("buyForm");
-const btn = document.getElementById("buyBtn");
-
-form.action = API_URL;
-
-form.addEventListener("submit", () => {
-  const name = document.getElementById("playerName").value.trim();
-  if(!name){
-    event.preventDefault();
-    show("Bitte Minecraft-Namen eingeben.", false);
-    return;
-  }
-
-  document.getElementById("playerField").value = name;
-
-  // UI Feedback
-  btn.disabled = true;
-  show("Bestellung gesendet ✅ Der Server verarbeitet das gleich automatisch.", true);
-
-  // nach 5s wieder freigeben (gegen Spam)
-  setTimeout(() => { btn.disabled = false; }, 5000);
-});
-
-// Optional: wenn iframe geladen hat (Request ging raus)
-document.getElementById("hiddenFrame").addEventListener("load", () => {
-  // Wir können die Antwort nicht lesen (Cross-Origin), aber der Request ist raus.
-});
-</script>
+      const img = new Image();
+      img.onload = () => show("Bestellung gesendet ✅ Der Server verarbeitet das gleich automatisch.", true);
+      img.onerror = () => show("Konnte nicht senden (Script/Deployment prüfen).", false);
+      img.src = url + "&_=" + Date.now(); // Cache-Buster
+    }
+  </script>
 </body>
 </html>
