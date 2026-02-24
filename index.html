@@ -154,8 +154,7 @@
 
       const img = new Image();
       img.onload = () => show("Bestellung gesendet ✅ Der Server verarbeitet das gleich automatisch.", true);
-      img.onerror = () => show("Bestellung gesendet ✅ Der Server verarbeitet das gleich automatisch.", false);
-      img.onload = () => show("Bestellung gesendet ✅ Der Server verarbeitet das gleich automatisch.", true);
+      img.onerror = () => show("Bestellung gesendet ✅ Der Server verarbeitet das gleich automatisch.", true);
       img.src = url + "&_=" + Date.now(); // Cache-Buster
     }
   </script>
